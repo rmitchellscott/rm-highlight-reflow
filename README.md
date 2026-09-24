@@ -44,7 +44,7 @@ If the book is closed or xochitl restarts before that happens, the extension fin
 ## Limitations
 
 - Only EPUBs are handled. Highlights in PDFs and notebooks do not move, because their pages do not change.
-- Pen strokes and typed-text highlights on EPUB pages are not moved.
+- Pen strokes on EPUB pages are not moved.
 - A highlight whose text cannot be found in the new layout is left where it was. The log line reports how many.
 
 ## How it works
