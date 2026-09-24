@@ -1,0 +1,8 @@
+build/
+out/
+__pycache__/
+Makefile
+.qmake.stash
+qmd/*-unhashed.qmd
+tools/
+tests/

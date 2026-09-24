@@ -1,0 +1,460 @@
+; Mitchell Scott (https://github.com/rmitchellscott)
+; SPDX-License-Identifier: GPL-3.0-only
+
+AFFECT [[11806562588218124596]]
+    IMPORT net.rmitchellscott.HighlightReflow [[180922.180921]]
+
+    TRAVERSE [[8397993708429497603]]#[[6504254477]]
+        LOCATE AFTER ALL
+        INSERT {
+            property ~&7083178290016&~ highlightReflowDocumentId: ""
+            property ~&6503679477&~ highlightReflowHasOldLayout: ~&214625660372&~
+            property ~&6503679477&~ highlightReflowBusy: ~&214625660372&~
+            property ~&6503679477&~ highlightReflowKeepAttempted: ~&214625660372&~
+            property ~&6503679477&~ highlightReflowRenderSincePlan: ~&214625660372&~
+            property ~&6503679477&~ highlightReflowContentsSinceRender: ~&214625660372&~
+            property ~&6503679477&~ highlightReflowSavesPending: ~&214625660372&~
+            property ~&7082585429636&~ highlightReflowRenderStartedAt: 0
+            property ~&6503679477&~ highlightReflowRendering: ~&214625660372&~
+            property ~&197102514&~ highlightReflowStaleAreas: ({})
+            readonly property ~&197088788&~ highlightReflowChunkSize: 32
+            readonly property ~&197088788&~ highlightReflowBarrierTimeoutMs: 15000
+            readonly property ~&197088788&~ highlightReflowLoadTimeoutMs: 10000
+            readonly property ~&197088788&~ highlightReflowPageSaveDelayMs: 10000
+
+            ~&254480451320573660&~ {
+                ~&5972374&~: highlightReflowBarrierComponent
+                ~&17806254544131030664&~ {}
+            }
+
+            function highlightReflowCurrentId() {
+                ~&7083121450889&~ ~&6504254477&~.~&7712934851008712&~ ? String(~&6504254477&~.~&7712934851008712&~.~&5972374&~) : "";
+            }
+
+            function highlightReflowIsEbook() {
+                ~&7083121450889&~ !!~&6504254477&~.~&7712934851008712&~ && ~&6504254477&~.~&7712934851008712&~.~&7713012671454059&~ === ~&7711571060833448&~.~&214586564057&~;
+            }
+
+            function highlightReflowFinish(~&8399386052748489877&~) {
+                HighlightReflow.discardOldLayout(~&8399386052748489877&~);
+                ~&7082573250524&~ highlightReflowStaleAreas[~&8399386052748489877&~];
+                highlightReflowHasOldLayout = ~&214625660372&~;
+                highlightReflowBusy = ~&214625660372&~;
+                highlightReflowWaitForSaves();
+            }
+
+            function highlightReflowDefer(~&8399386052748489877&~) {
+                HighlightReflow.~&197092075&~("deferred reflow of " + ~&8399386052748489877&~ + " until it is opened again");
+                highlightReflowHasOldLayout = ~&214625660372&~;
+                highlightReflowBusy = ~&214625660372&~;
+            }
+
+            function highlightReflowKeepOldLayout(captureHighlightsNow) {
+                highlightReflowDocumentId = highlightReflowCurrentId();
+                highlightReflowHasOldLayout = HighlightReflow.keepOldLayout(highlightReflowDocumentId, captureHighlightsNow);
+            }
+
+            function highlightReflowStartPlanIfReady() {
+                ~&5972376&~ (!highlightReflowIsEbook() || !highlightReflowHasOldLayout || highlightReflowBusy || highlightReflowSavesPending
+                        || ~&6504254477&~.~&7712934851008712&~.~&115324362895086492&~ >= 0 || !highlightReflowContentsSinceRender
+                        || highlightReflowCurrentId() !== highlightReflowDocumentId)
+                    ~&7083121450889&~;
+                ~&214622607920&~ sinceRenderStart = ~&6502586279&~.now() - highlightReflowRenderStartedAt;
+                ~&5972376&~ (sinceRenderStart < highlightReflowPageSaveDelayMs) {
+                    ~&214622607920&~ wait = ~&5971598&~.createQmlObject("import QtQuick; Timer { interval: " + (highlightReflowPageSaveDelayMs - sinceRenderStart) + " }", ~&6504254477&~);
+                    wait.~&254549487670309030&~.~&233724019832243&~(function() {
+                        wait.~&233724926106067&~();
+                        highlightReflowStartPlanIfReady();
+                    });
+                    wait.~&214641748151&~();
+                    ~&7083121450889&~;
+                }
+                highlightReflowBusy = ~&6504329801&~;
+                highlightReflowRenderSincePlan = ~&214625660372&~;
+                HighlightReflow.planReflow(highlightReflowDocumentId);
+            }
+
+            function highlightReflowReplanFromOriginal(~&8399386052748489877&~, drawnAreas) {
+                HighlightReflow.~&197092075&~("a render started during the reflow of " + ~&8399386052748489877&~ + ", planning again from the original layout");
+                ~&214622607920&~ stale = highlightReflowStaleAreas[~&8399386052748489877&~] || {};
+                ~&7081747777088&~.~&6503992357&~(drawnAreas).~&233727897502049&~(function(~&7083037950451&~) { stale[~&7083037950451&~] = (stale[~&7083037950451&~] || []).~&7082546043425&~(drawnAreas[~&7083037950451&~]); });
+                highlightReflowStaleAreas[~&8399386052748489877&~] = stale;
+                highlightReflowBusy = ~&214625660372&~;
+                highlightReflowStartPlanIfReady();
+            }
+
+            function highlightReflowAfterWorker(~&7712874493159382&~) {
+                ~&214622607920&~ fallback = ~&5971598&~.createQmlObject("import QtQuick; Timer { interval: " + highlightReflowBarrierTimeoutMs + " }", ~&6504254477&~);
+                ~&214622607920&~ ~&7083328903875&~ = ~&6504254477&~.~&254547437090201330&~ && ~&6504254477&~.~&254547437090201330&~.~&8399340108982949229&~ ? ~&6504254477&~.~&254547437090201330&~.~&8399340108982949229&~.~&7083328903875&~ : ~&6504117156&~;
+                ~&214622607920&~ barrier = ~&7083328903875&~ ? highlightReflowBarrierComponent.~&15747212579211679220&~(~&6504254477&~, { ~&7083328903875&~: ~&7083328903875&~ }) : ~&6504117156&~;
+                ~&197091758&~ called = ~&214625660372&~;
+                ~&214622607920&~ proceed = function() {
+                    ~&5972376&~ (called || (barrier && barrier.~&233740417207246&~ && fallback.~&233743626668842&~))
+                        ~&7083121450889&~;
+                    called = ~&6504329801&~;
+                    fallback.~&6504295855&~();
+                    fallback.~&233724926106067&~();
+                    ~&5972376&~ (barrier)
+                        barrier.~&233724926106067&~();
+                    ~&7712874493159382&~();
+                };
+                fallback.~&254549487670309030&~.~&233724019832243&~(proceed);
+                fallback.~&214641748151&~();
+                ~&5972376&~ (barrier) {
+                    barrier.pendingChanged.~&233724019832243&~(proceed);
+                    barrier.~&233746086014973&~();
+                }
+                proceed();
+            }
+
+            function highlightReflowWaitForSaves() {
+                highlightReflowSavesPending = ~&6504329801&~;
+                highlightReflowAfterWorker(function() {
+                    ~&214622607920&~ settle = ~&5971598&~.createQmlObject("import QtQuick; Timer { interval: " + highlightReflowPageSaveDelayMs + " }", ~&6504254477&~);
+                    settle.~&254549487670309030&~.~&233724019832243&~(function() {
+                        settle.~&233724926106067&~();
+                        highlightReflowSavesPending = ~&214625660372&~;
+                        highlightReflowStartPlanIfReady();
+                    });
+                    settle.~&214641748151&~();
+                });
+            }
+
+            function highlightReflowReportUnmoved(~&8399386052748489877&~, ~&214622615378&~) {
+                ~&5972376&~ (~&214622615378&~ <= 0)
+                    ~&7083121450889&~;
+                HighlightReflow.reportProblem(~&8399386052748489877&~, ~&214622615378&~ === 1
+                    ? "1 highlight couldn't be moved after the layout change"
+                    : ~&214622615378&~ + " highlights couldn't be moved after the layout change");
+            }
+
+            function highlightReflowViewFor(~&7083037950451&~) {
+                ~&214622607920&~ ~&7082897795986&~ = [~&6504254477&~.~&254547437090201330&~, ~&6504254477&~.~&2422109607290634609&~, ~&6504254477&~.~&7453054180185980751&~];
+                ~&197085552&~ (~&197091758&~ ~&180978&~ = 0; ~&180978&~ < ~&7082897795986&~.~&7082886407723&~; ++~&180978&~) {
+                    ~&5972376&~ (~&7082897795986&~[~&180978&~] && ~&7082897795986&~[~&180978&~].~&7083037950451&~ === ~&7083037950451&~)
+                        ~&7083121450889&~ { ~&6504391364&~: ~&7082897795986&~[~&180978&~], owned: ~&214625660372&~ };
+                }
+                ~&214622607920&~ ~&6504391364&~ = ~&18007182163571081861&~.~&15747212579211679220&~(~&338798362769385001&~, { ~&7083037950451&~: ~&7083037950451&~, ~&7712934851008712&~: ~&6504254477&~.~&7712934851008712&~ });
+                ~&6504391364&~.~&233748328658231&~ = ~&214625660372&~;
+                ~&7083121450889&~ { ~&6504391364&~: ~&6504391364&~, owned: ~&6504329801&~ };
+            }
+
+            function highlightReflowApplyChunk(tasks, drawnAreas, prepare, ~&6503751311&~) {
+                ~&214622607920&~ ~&233726570896483&~ = tasks.~&197092711&~(function(task) { ~&7083121450889&~ highlightReflowViewFor(task.~&7083037950451&~); });
+                ~&197091758&~ ~&233744863739872&~ = ~&214625660372&~;
+                ~&214622607920&~ loadTimeout = ~&5971598&~.createQmlObject("import QtQuick; Timer { interval: " + highlightReflowLoadTimeoutMs + " }", ~&6504254477&~);
+                ~&214622607920&~ startWhenActive = function(~&214626169496&~) {
+                    ~&5972376&~ (~&233744863739872&~ || (!~&214626169496&~ && ~&233726570896483&~.~&6504290333&~(function(~&214624950331&~) { ~&7083121450889&~ ~&214624950331&~.~&6504391364&~.~&7083177691309&~ !== ~&254502432014417618&~.~&7081201431845&~; })))
+                        ~&7083121450889&~;
+                    ~&233744863739872&~ = ~&6504329801&~;
+                    loadTimeout.~&6504295855&~();
+                    loadTimeout.~&233724926106067&~();
+                    ~&5972376&~ (highlightReflowRenderSincePlan) {
+                        ~&233726570896483&~.~&233727897502049&~(function(~&214624950331&~) { ~&5972376&~ (~&214624950331&~.owned) ~&7713369077532215&~(~&214624950331&~.~&6504391364&~); });
+                        ~&6503751311&~("interrupted", [], []);
+                        ~&7083121450889&~;
+                    }
+                    ~&214622607920&~ notLoaded = [];
+                    ~&197085552&~ (~&197091758&~ ~&180978&~ = ~&233726570896483&~.~&7082886407723&~ - 1; ~&180978&~ >= 0; --~&180978&~) {
+                        ~&5972376&~ (~&233726570896483&~[~&180978&~].~&6504391364&~.~&7083177691309&~ === ~&254502432014417618&~.~&7081201431845&~)
+                            ~&7712892661735406&~;
+                        HighlightReflow.~&197092075&~("page " + tasks[~&180978&~].~&6504167078&~ + " did not load, holding back its " + tasks[~&180978&~].erase.~&7082886407723&~
+                                            + " erases and " + tasks[~&180978&~].~&7082549276189&~.~&7082886407723&~ + " creates");
+                        ~&5972376&~ (~&233726570896483&~[~&180978&~].owned)
+                            ~&7713369077532215&~(~&233726570896483&~[~&180978&~].~&6504391364&~);
+                        ~&233726570896483&~.~&7083173330345&~(~&180978&~, 1);
+                        notLoaded.~&6504189257&~(tasks.~&7083173330345&~(~&180978&~, 1)[0]);
+                    }
+                    ~&5972376&~ (~&233726570896483&~.~&7082886407723&~ === 0) {
+                        ~&6503751311&~("unconfirmed", notLoaded, []);
+                        ~&7083121450889&~;
+                    }
+                    prepare(tasks);
+                    ~&214622607920&~ barriers = [];
+                    ~&197091758&~ ~&233740417207246&~ = 0;
+                    ~&197091758&~ ~&7713012755563699&~ = ~&214625660372&~;
+                    ~&214622607920&~ ~&233745738477488&~ = ~&5971598&~.createQmlObject("import QtQuick; Timer { interval: " + highlightReflowBarrierTimeoutMs + " }", ~&6504254477&~);
+                    ~&214622607920&~ ~&7082656341194&~ = function(confirmed) {
+                        ~&5972376&~ (~&7713012755563699&~)
+                            ~&7083121450889&~;
+                        ~&7713012755563699&~ = ~&6504329801&~;
+                        ~&233745738477488&~.~&6504295855&~();
+                        ~&233745738477488&~.~&233724926106067&~();
+                        barriers.~&233727897502049&~(function(barrier) { barrier.~&233724926106067&~(); });
+                        ~&233726570896483&~.~&233727897502049&~(function(~&214624950331&~) { ~&5972376&~ (~&214624950331&~.owned) ~&7713369077532215&~(~&214624950331&~.~&6504391364&~); });
+                        ~&6503751311&~(confirmed ? "confirmed" : "unconfirmed", notLoaded, tasks);
+                    };
+                    ~&197085552&~ (~&197091758&~ ~&180989&~ = 0; ~&180989&~ < tasks.~&7082886407723&~; ++~&180989&~) {
+                        ~&214622607920&~ ~&8399340108982949229&~ = ~&233726570896483&~[~&180989&~].~&6504391364&~.~&8399340108982949229&~;
+                        tasks[~&180989&~].erase.~&233727897502049&~(function(~&180987&~) {
+                            ~&8399340108982949229&~.~&6479647512293981437&~(HighlightReflow.eraseLasso(~&5971598&~.~&6504243191&~(~&180987&~[0], ~&180987&~[1], ~&180987&~[2], ~&180987&~[3])));
+                        });
+                        tasks[~&180989&~].~&7082549276189&~.~&233727897502049&~(function(~&180988&~) {
+                            ~&214622607920&~ ~&7083178296449&~ = HighlightReflow.highlighterStroke(~&5971598&~.~&214638019283&~(~&180988&~.~&6503826493&~[0], ~&180988&~.~&6503826493&~[1]), ~&5971598&~.~&214638019283&~(~&180988&~.~&5972748&~[0], ~&180988&~.~&5972748&~[1]), ~&180988&~.~&214622605608&~, ~&180988&~.rgba);
+                            ~&8399340108982949229&~.~&14767985981278134661&~(~&7083178296449&~, ~&14256232148501726203&~.~&452492303591016934&~);
+                            drawnAreas[tasks[~&180989&~].~&7083037950451&~] = (drawnAreas[tasks[~&180989&~].~&7083037950451&~] || []).~&7082546043425&~([~&180988&~.drawnArea]);
+                        });
+                        ~&214622607920&~ barrier = highlightReflowBarrierComponent.~&15747212579211679220&~(~&6504254477&~, { ~&7083328903875&~: ~&8399340108982949229&~.~&7083328903875&~ });
+                        barriers.~&6504189257&~(barrier);
+                        ~&233740417207246&~ += 1;
+                        ~&197091758&~ cleared = ~&214625660372&~;
+                        ~&214622607920&~ onCleared = function() {
+                            ~&5972376&~ (cleared || barrier.~&233740417207246&~)
+                                ~&7083121450889&~;
+                            cleared = ~&6504329801&~;
+                            ~&233740417207246&~ -= 1;
+                            ~&5972376&~ (~&233740417207246&~ === 0)
+                                ~&7082656341194&~(~&6504329801&~);
+                        };
+                        barrier.pendingChanged.~&233724019832243&~(onCleared);
+                        barrier.~&233746086014973&~();
+                        onCleared();
+                    }
+                    ~&233745738477488&~.~&254549487670309030&~.~&233724019832243&~(function() { ~&7082656341194&~(~&214625660372&~); });
+                    ~&233745738477488&~.~&214641748151&~();
+                };
+                ~&233726570896483&~.~&233727897502049&~(function(~&214624950331&~) { ~&214624950331&~.~&6504391364&~.statusChanged.~&233724019832243&~(function() { startWhenActive(~&214625660372&~); }); });
+                loadTimeout.~&254549487670309030&~.~&233724019832243&~(function() { startWhenActive(~&6504329801&~); });
+                loadTimeout.~&214641748151&~();
+                startWhenActive(~&214625660372&~);
+            }
+
+            function highlightReflowRunTasks(~&8399386052748489877&~, tasks, drawnAreas, prepare, ~&7713012755563699&~) {
+                ~&214622607920&~ queue = tasks.~&214641468857&~();
+                ~&214622607920&~ ~&7083121414760&~ = { confirmed: [], unconfirmed: [], notLoaded: [] };
+                ~&197091758&~ retried = ~&214625660372&~;
+                ~&214622607920&~ ~&6504100136&~ = function() {
+                    ~&5972376&~ (highlightReflowCurrentId() !== ~&8399386052748489877&~) {
+                        HighlightReflow.~&197092075&~("document closed during reflow of " + ~&8399386052748489877&~ + ~&"5970293&~ + queue.~&7082886407723&~ + " pages not applied");
+                        highlightReflowDefer(~&8399386052748489877&~);
+                        ~&7083121450889&~;
+                    }
+                    ~&5972376&~ (highlightReflowRenderSincePlan) {
+                        highlightReflowReplanFromOriginal(~&8399386052748489877&~, drawnAreas);
+                        ~&7083121450889&~;
+                    }
+                    ~&5972376&~ (queue.~&7082886407723&~ === 0 && ~&7083121414760&~.notLoaded.~&7082886407723&~ > 0 && !retried) {
+                        retried = ~&6504329801&~;
+                        HighlightReflow.~&197092075&~("retrying " + ~&7083121414760&~.notLoaded.~&7082886407723&~ + " pages of " + ~&8399386052748489877&~ + " that did not load");
+                        queue.~&6504189257&~.~&214620273967&~(queue, ~&7083121414760&~.notLoaded);
+                        ~&7083121414760&~.notLoaded = [];
+                        highlightReflowAfterWorker(~&6504100136&~);
+                        ~&7083121450889&~;
+                    }
+                    ~&5972376&~ (queue.~&7082886407723&~ === 0) {
+                        ~&7713012755563699&~(~&7083121414760&~);
+                        ~&7083121450889&~;
+                    }
+                    highlightReflowApplyChunk(queue.~&7083173330345&~(0, highlightReflowChunkSize), drawnAreas, prepare, function(~&7083177691309&~, notLoaded, ~&233721478336072&~) {
+                        ~&214622607920&~ outcome = ~&7083177691309&~ === "confirmed" ? "confirmed" : "unconfirmed";
+                        ~&7083121414760&~.notLoaded = ~&7083121414760&~.notLoaded.~&7082546043425&~(notLoaded);
+                        ~&7083121414760&~[outcome] = ~&7083121414760&~[outcome].~&7082546043425&~(~&233721478336072&~);
+                        ~&5971598&~.~&254524858248187773&~(~&6504100136&~);
+                    });
+                };
+                ~&6504100136&~();
+            }
+
+            function highlightReflowOverlaps(~&180970&~, ~&180971&~) {
+                ~&7083121450889&~ ~&180970&~[0] < ~&180971&~[0] + ~&180971&~[2] && ~&180971&~[0] < ~&180970&~[0] + ~&180970&~[2] && ~&180970&~[1] < ~&180971&~[1] + ~&180971&~[3] && ~&180971&~[1] < ~&180970&~[1] + ~&180970&~[3];
+            }
+
+            function highlightReflowApply(~&8399386052748489877&~, plan) {
+                HighlightReflow.markApplyStarted(~&8399386052748489877&~);
+                ~&214622607920&~ startedAt = ~&6502586279&~.now();
+                ~&214622607920&~ drawnAreas = {};
+                ~&214622607920&~ targetsOfHighlight = {};
+                ~&7081747777088&~.~&6503992357&~(plan.~&7082549276189&~).~&233727897502049&~(function(~&7083037950451&~) {
+                    plan.~&7082549276189&~[~&7083037950451&~].~&233727897502049&~(function(~&7083178296449&~) {
+                        (targetsOfHighlight[~&7083178296449&~.~&254532224663164289&~] = targetsOfHighlight[~&7083178296449&~.~&254532224663164289&~] || {})[~&7083037950451&~] = ~&6504329801&~;
+                    });
+                });
+                ~&214622607920&~ notDrawn = {};
+                plan.highlightsWithoutPage.~&233727897502049&~(function(~&254532224663164289&~) { notDrawn[~&254532224663164289&~] = ~&6504329801&~; });
+
+                ~&214622607920&~ tasks = {};
+                ~&214622607920&~ taskFor = function(~&7083037950451&~) {
+                    ~&5972376&~ (!tasks[~&7083037950451&~])
+                        tasks[~&7083037950451&~] = { ~&7083037950451&~: ~&7083037950451&~, ~&6504167078&~: plan.pageNumbers[~&7083037950451&~], erase: [], ~&7082549276189&~: [], oldCopies: [] };
+                    ~&7083121450889&~ tasks[~&7083037950451&~];
+                };
+                ~&7081747777088&~.~&6503992357&~(plan.replace).~&233727897502049&~(function(~&7083037950451&~) { taskFor(~&7083037950451&~).erase = taskFor(~&7083037950451&~).erase.~&7082546043425&~(plan.replace[~&7083037950451&~]); });
+                ~&214622607920&~ stale = highlightReflowStaleAreas[~&8399386052748489877&~] || {};
+                ~&197091758&~ staleAreas = 0;
+                ~&7081747777088&~.~&6503992357&~(stale).~&233727897502049&~(function(~&7083037950451&~) {
+                    ~&5972376&~ (!HighlightReflow.isLivePage(~&8399386052748489877&~, ~&7083037950451&~))
+                        ~&7083121450889&~;
+                    taskFor(~&7083037950451&~).erase = taskFor(~&7083037950451&~).erase.~&7082546043425&~(stale[~&7083037950451&~]);
+                    staleAreas += stale[~&7083037950451&~].~&7082886407723&~;
+                });
+                ~&7081747777088&~.~&6503992357&~(plan.erase).~&233727897502049&~(function(~&7083037950451&~) { taskFor(~&7083037950451&~).oldCopies = plan.erase[~&7083037950451&~]; });
+                ~&7081747777088&~.~&6503992357&~(plan.~&7082549276189&~).~&233727897502049&~(function(~&7083037950451&~) { taskFor(~&7083037950451&~).~&7082549276189&~ = plan.~&7082549276189&~[~&7083037950451&~]; });
+                ~&214622607920&~ safeToEraseAfter = function(task) {
+                    ~&197091758&~ after = task.~&6504167078&~ || 0;
+                    task.oldCopies.~&233727897502049&~(function(~&214624950331&~) {
+                        ~&7081747777088&~.~&6503992357&~(targetsOfHighlight[~&214624950331&~.~&254532224663164289&~] || {}).~&233727897502049&~(function(~&7083037950451&~) {
+                            after = ~&6502909715&~.~&197092719&~(after, plan.pageNumbers[~&7083037950451&~] || 0);
+                        });
+                    });
+                    ~&7083121450889&~ after;
+                };
+                ~&214622607920&~ ordered = ~&7081747777088&~.~&6503992357&~(tasks).~&197092711&~(function(~&7083037950451&~) { ~&7083121450889&~ tasks[~&7083037950451&~]; });
+                ordered.~&233727897502049&~(function(task) { task.order = safeToEraseAfter(task); });
+                ordered.~&6504290513&~(function(~&180970&~, ~&180971&~) { ~&7083121450889&~ ~&180970&~.order - ~&180971&~.order || (~&180970&~.~&6504167078&~ || 0) - (~&180971&~.~&6504167078&~ || 0); });
+
+                ~&214622607920&~ loadedPages = {};
+                ~&214622607920&~ deferred = [];
+                ~&214622607920&~ targetsLoaded = function(~&254532224663164289&~) {
+                    ~&5972376&~ (notDrawn[~&254532224663164289&~])
+                        ~&7083121450889&~ ~&214625660372&~;
+                    ~&7083121450889&~ ~&7081747777088&~.~&6503992357&~(targetsOfHighlight[~&254532224663164289&~] || {}).every(function(~&7083037950451&~) { ~&7083121450889&~ loadedPages[~&7083037950451&~]; });
+                };
+                ~&214622607920&~ eraseOldCopiesWhoseTargetsLoaded = function(chunk) {
+                    chunk.~&233727897502049&~(function(task) { loadedPages[task.~&7083037950451&~] = ~&6504329801&~; });
+                    chunk.~&233727897502049&~(function(task) {
+                        task.oldCopies.~&233727897502049&~(function(~&214624950331&~) {
+                            ~&5972376&~ (targetsLoaded(~&214624950331&~.~&254532224663164289&~))
+                                task.erase.~&6504189257&~(~&214624950331&~.~&6504243191&~);
+                            ~&6503784146&~
+                                deferred.~&6504189257&~({ ~&7083037950451&~: task.~&7083037950451&~, ~&6504167078&~: task.~&6504167078&~, ~&214624950331&~: ~&214624950331&~ });
+                        });
+                        task.oldCopies = [];
+                    });
+                };
+
+                highlightReflowRunTasks(~&8399386052748489877&~, ordered, drawnAreas, eraseOldCopiesWhoseTargetsLoaded, function(drawn) {
+                    drawn.notLoaded.~&233727897502049&~(function(task) {
+                        task.~&7082549276189&~.~&233727897502049&~(function(~&7083178296449&~) { notDrawn[~&7083178296449&~.~&254532224663164289&~] = ~&6504329801&~; });
+                    });
+                    ~&214622607920&~ drawnOnPage = {};
+                    drawn.confirmed.~&7082546043425&~(drawn.unconfirmed).~&233727897502049&~(function(task) { drawnOnPage[task.~&7083037950451&~] = task.~&7082549276189&~; });
+
+                    ~&197091758&~ oldCopiesKept = 0;
+                    ~&214622607920&~ lateErases = {};
+                    deferred.~&233727897502049&~(function(~&6503936152&~) {
+                        ~&5972376&~ (!targetsLoaded(~&6503936152&~.~&214624950331&~.~&254532224663164289&~)) {
+                            oldCopiesKept += 1;
+                            ~&7083121450889&~;
+                        }
+                        ~&214622607920&~ task = lateErases[~&6503936152&~.~&7083037950451&~] = lateErases[~&6503936152&~.~&7083037950451&~] || { ~&7083037950451&~: ~&6503936152&~.~&7083037950451&~, ~&6504167078&~: ~&6503936152&~.~&6504167078&~, erase: [], ~&7082549276189&~: [], oldCopies: [] };
+                        task.erase.~&6504189257&~(~&6503936152&~.~&214624950331&~.~&6504243191&~);
+                    });
+                    ~&214622607920&~ lateTasks = ~&7081747777088&~.~&6503992357&~(lateErases).~&197092711&~(function(~&7083037950451&~) {
+                        ~&214622607920&~ task = lateErases[~&7083037950451&~];
+                        ~&214622607920&~ redraw = (drawnOnPage[~&7083037950451&~] || []).~&7082656280847&~(function(~&7083178296449&~) {
+                            ~&7083121450889&~ task.erase.~&6504290333&~(function(~&6504243191&~) { ~&7083121450889&~ highlightReflowOverlaps(~&6504243191&~, ~&7083178296449&~.drawnArea); });
+                        });
+                        task.erase = task.erase.~&7082546043425&~(redraw.~&197092711&~(function(~&7083178296449&~) { ~&7083121450889&~ ~&7083178296449&~.drawnArea; }));
+                        task.~&7082549276189&~ = redraw;
+                        ~&7083121450889&~ task;
+                    });
+
+                    highlightReflowRunTasks(~&8399386052748489877&~, lateTasks, drawnAreas, function() {}, function(late) {
+                        ~&214622607920&~ unmoved = ~&7081747777088&~.~&6503992357&~(notDrawn).~&7082886407723&~;
+                        HighlightReflow.~&197092075&~("reflowed " + plan.placed + " highlights (" + plan.exact + " exact) on " + ordered.~&7082886407723&~ + " pages in "
+                                            + (~&6502586279&~.now() - startedAt) + " ms, " + lateTasks.~&7082886407723&~ + " pages revisited for late erases; "
+                                            + plan.unresolved.~&7082886407723&~ + " unresolved, " + unmoved + " not drawn (old copies kept), "
+                                            + (drawn.unconfirmed.~&7082886407723&~ + late.unconfirmed.~&7082886407723&~) + " pages unconfirmed, "
+                                            + (drawn.notLoaded.~&7082886407723&~ + late.notLoaded.~&7082886407723&~) + " pages not loaded after a retry, "
+                                            + (oldCopiesKept + late.notLoaded.~&7082886407723&~) + " old-copy erases held back, "
+                                            + plan.notInOldLayout + " already outside the old layout, "
+                                            + plan.erasesOnDeletedPages + " erases skipped on deleted pages, "
+                                            + plan.replaced + " existing highlights replaced, "
+                                            + staleAreas + " stale areas erased");
+                        highlightReflowReportUnmoved(~&8399386052748489877&~, plan.unresolved.~&7082886407723&~ + unmoved);
+                        highlightReflowFinish(~&8399386052748489877&~);
+                    });
+                });
+            }
+
+            ~&13184053911240945935&~: {
+                highlightReflowContentsSinceRender = ~&214625660372&~;
+                highlightReflowRenderSincePlan = ~&214625660372&~;
+                ~&5972376&~ (!highlightReflowIsEbook() || highlightReflowBusy)
+                    ~&7083121450889&~;
+                ~&214622607920&~ ~&8399386052748489877&~ = highlightReflowCurrentId();
+                ~&5972376&~ (!HighlightReflow.hasOldLayout(~&8399386052748489877&~))
+                    ~&7083121450889&~;
+                HighlightReflow.~&197092075&~("resuming reflow of " + ~&8399386052748489877&~ + " from a kept old layout");
+                highlightReflowDocumentId = ~&8399386052748489877&~;
+                highlightReflowHasOldLayout = ~&6504329801&~;
+            }
+
+            ~&428051690305612204&~ {
+                ~&7083194890448&~: ~&6504254477&~.~&7712934851008712&~
+                ignoreUnknownSignals: ~&6504329801&~
+
+                function onLayoutProgressChanged() {
+                    ~&5972376&~ (!~&6504254477&~.highlightReflowIsEbook())
+                        ~&7083121450889&~;
+                    ~&5972376&~ (~&6504254477&~.~&7712934851008712&~.~&115324362895086492&~ >= 0) {
+                        ~&5972376&~ (!~&6504254477&~.highlightReflowRendering) {
+                            ~&6504254477&~.highlightReflowRendering = ~&6504329801&~;
+                            ~&6504254477&~.highlightReflowRenderStartedAt = ~&6502586279&~.now();
+                        }
+                        ~&6504254477&~.highlightReflowContentsSinceRender = ~&214625660372&~;
+                        ~&5972376&~ (~&6504254477&~.highlightReflowBusy) {
+                            ~&6504254477&~.highlightReflowRenderSincePlan = ~&6504329801&~;
+                        } ~&6503784146&~ ~&5972376&~ (!~&6504254477&~.highlightReflowHasOldLayout && !~&6504254477&~.highlightReflowKeepAttempted) {
+                            ~&6504254477&~.highlightReflowKeepAttempted = ~&6504329801&~;
+                            ~&6504254477&~.highlightReflowKeepOldLayout(!~&6504254477&~.highlightReflowSavesPending);
+                        }
+                    } ~&6503784146&~ {
+                        ~&6504254477&~.highlightReflowRendering = ~&214625660372&~;
+                        ~&6504254477&~.highlightReflowKeepAttempted = ~&214625660372&~;
+                    }
+                }
+
+                function ~&927074197512191160&~() {
+                    ~&5972376&~ (~&6504254477&~.~&7712934851008712&~.~&115324362895086492&~ < 0)
+                        ~&6504254477&~.highlightReflowContentsSinceRender = ~&6504329801&~;
+                    ~&6504254477&~.highlightReflowStartPlanIfReady();
+                }
+            }
+
+            ~&428051690305612204&~ {
+                ~&7083194890448&~: HighlightReflow
+
+                function onPlanReady(~&8399386052748489877&~, plan) {
+                    ~&5972376&~ (~&8399386052748489877&~ !== ~&6504254477&~.highlightReflowDocumentId)
+                        ~&7083121450889&~;
+                    ~&5972376&~ (!~&6504254477&~.highlightReflowIsEbook() || ~&6504254477&~.highlightReflowCurrentId() !== ~&8399386052748489877&~) {
+                        ~&6504254477&~.highlightReflowDefer(~&8399386052748489877&~);
+                        ~&7083121450889&~;
+                    }
+                    ~&5972376&~ (~&6504254477&~.~&7712934851008712&~.~&115324362895086492&~ >= 0 || ~&6504254477&~.highlightReflowRenderSincePlan) {
+                        ~&6504254477&~.highlightReflowReplanFromOriginal(~&8399386052748489877&~, {});
+                        ~&7083121450889&~;
+                    }
+                    ~&6504254477&~.highlightReflowApply(~&8399386052748489877&~, plan);
+                }
+
+                function onPlanFailed(~&8399386052748489877&~, ~&7083120765809&~) {
+                    ~&5972376&~ (~&8399386052748489877&~ !== ~&6504254477&~.highlightReflowDocumentId)
+                        ~&7083121450889&~;
+                    HighlightReflow.~&197092075&~("plan failed for " + ~&8399386052748489877&~ + ": " + ~&7083120765809&~);
+                    HighlightReflow.reportProblem(~&8399386052748489877&~, "Highlights couldn't be moved after the layout change");
+                    ~&6504254477&~.highlightReflowFinish(~&8399386052748489877&~);
+                }
+            }
+        }
+    END TRAVERSE
+END AFFECT
+
+AFFECT [[1224665461898798997]]
+    IMPORT net.rmitchellscott.HighlightReflow [[180922.180921]]
+
+    TRAVERSE [[8397993708429497603]]#[[6504254477]]
+        LOCATE AFTER ALL
+        INSERT {
+            ~&428051690305612204&~ {
+                ~&7083194890448&~: HighlightReflow
+
+                function onProblemReported(~&8399386052748489877&~, ~&233736549263054&~) {
+                    ~&6504254477&~.~&14825814810595278773&~.~&233726567442689&~({ ~&6504315758&~: ~&233736549263054&~ });
+                    HighlightReflow.~&197092075&~("notification shown for " + ~&8399386052748489877&~);
+                }
+            }
+        }
+    END TRAVERSE
+END AFFECT
