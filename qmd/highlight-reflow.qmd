@@ -367,17 +367,21 @@ AFFECT [[11806562588218124596]]
                 });
             }
 
-            ~&13184053911240945935&~: {
-                highlightReflowContentsSinceRender = ~&214625660372&~;
-                highlightReflowRenderSincePlan = ~&214625660372&~;
-                ~&5972376&~ (!highlightReflowIsEbook() || highlightReflowBusy)
-                    ~&7083121450889&~;
-                ~&214622607920&~ ~&8399386052748489877&~ = highlightReflowCurrentId();
-                ~&5972376&~ (!HighlightReflow.hasOldLayout(~&8399386052748489877&~))
-                    ~&7083121450889&~;
-                HighlightReflow.~&197092075&~("resuming reflow of " + ~&8399386052748489877&~ + " from a kept old layout");
-                highlightReflowDocumentId = ~&8399386052748489877&~;
-                highlightReflowHasOldLayout = ~&6504329801&~;
+            ~&428051690305612204&~ {
+                ~&7083194890448&~: ~&6504254477&~
+
+                function ~&13184053911240945935&~() {
+                    ~&6504254477&~.highlightReflowContentsSinceRender = ~&214625660372&~;
+                    ~&6504254477&~.highlightReflowRenderSincePlan = ~&214625660372&~;
+                    ~&5972376&~ (!~&6504254477&~.highlightReflowIsEbook() || ~&6504254477&~.highlightReflowBusy)
+                        ~&7083121450889&~;
+                    ~&214622607920&~ ~&8399386052748489877&~ = ~&6504254477&~.highlightReflowCurrentId();
+                    ~&5972376&~ (!HighlightReflow.hasOldLayout(~&8399386052748489877&~))
+                        ~&7083121450889&~;
+                    HighlightReflow.~&197092075&~("resuming reflow of " + ~&8399386052748489877&~ + " from a kept old layout");
+                    ~&6504254477&~.highlightReflowDocumentId = ~&8399386052748489877&~;
+                    ~&6504254477&~.highlightReflowHasOldLayout = ~&6504329801&~;
+                }
             }
 
             ~&428051690305612204&~ {
