@@ -2,7 +2,7 @@
 ; SPDX-License-Identifier: GPL-3.0-only
 
 AFFECT [[11806562588218124596]]
-    IMPORT net.rmitchellscott.HighlightReflow [[180922.180921]]
+    IMPORT net.rmitchellscott.HighlightReflow 1.0
 
     TRAVERSE [[8397993708429497603]]#[[6504254477]]
         LOCATE AFTER ALL
@@ -141,12 +141,12 @@ AFFECT [[11806562588218124596]]
 
             function highlightReflowApplyChunk(tasks, drawnAreas, prepare, ~&6503751311&~) {
                 ~&214622607920&~ ~&233726570896483&~ = tasks.~&197092711&~(function(task) { ~&7083121450889&~ highlightReflowViewFor(task.~&7083037950451&~); });
-                ~&197091758&~ ~&233744863739872&~ = ~&214625660372&~;
+                ~&197091758&~ started = ~&214625660372&~;
                 ~&214622607920&~ loadTimeout = ~&5971598&~.createQmlObject("import QtQuick; Timer { interval: " + highlightReflowLoadTimeoutMs + " }", ~&6504254477&~);
                 ~&214622607920&~ startWhenActive = function(~&214626169496&~) {
-                    ~&5972376&~ (~&233744863739872&~ || (!~&214626169496&~ && ~&233726570896483&~.~&6504290333&~(function(~&214624950331&~) { ~&7083121450889&~ ~&214624950331&~.~&6504391364&~.~&7083177691309&~ !== ~&254502432014417618&~.~&7081201431845&~; })))
+                    ~&5972376&~ (started || (!~&214626169496&~ && ~&233726570896483&~.~&6504290333&~(function(~&214624950331&~) { ~&7083121450889&~ ~&214624950331&~.~&6504391364&~.~&7083177691309&~ !== ~&254502432014417618&~.~&7081201431845&~; })))
                         ~&7083121450889&~;
-                    ~&233744863739872&~ = ~&6504329801&~;
+                    started = ~&6504329801&~;
                     loadTimeout.~&6504295855&~();
                     loadTimeout.~&233724926106067&~();
                     ~&5972376&~ (highlightReflowRenderSincePlan) {
@@ -446,7 +446,7 @@ AFFECT [[11806562588218124596]]
 END AFFECT
 
 AFFECT [[1224665461898798997]]
-    IMPORT net.rmitchellscott.HighlightReflow [[180922.180921]]
+    IMPORT net.rmitchellscott.HighlightReflow 1.0
 
     TRAVERSE [[8397993708429497603]]#[[6504254477]]
         LOCATE AFTER ALL

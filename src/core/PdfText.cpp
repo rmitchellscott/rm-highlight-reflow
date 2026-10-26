@@ -27,7 +27,16 @@ std::shared_ptr<Pdfium> PdfText::load(const std::string &libraryPath, bool priva
 {
 	auto pdfium = std::make_shared<Pdfium>();
 #ifdef __linux__
-	pdfium->handle = privateNamespace ? dlmopen(LM_ID_NEWLM, libraryPath.c_str(), RTLD_NOW) : dlopen(libraryPath.c_str(), RTLD_NOW);
+	if (privateNamespace) {
+		// FreeType dlopen()s HarfBuzz on init, which crashes ld.so inside a fresh namespace unless it is already loaded there
+		void *harfbuzz = dlmopen(LM_ID_NEWLM, "libharfbuzz.so.0", RTLD_NOW);
+		Lmid_t privateLinkMap;
+		if (!harfbuzz || dlinfo(harfbuzz, RTLD_DI_LMID, &privateLinkMap) != 0)
+			return nullptr;
+		pdfium->handle = dlmopen(privateLinkMap, libraryPath.c_str(), RTLD_NOW);
+	} else {
+		pdfium->handle = dlopen(libraryPath.c_str(), RTLD_NOW);
+	}
 #else
 	(void)privateNamespace;
 	pdfium->handle = dlopen(libraryPath.c_str(), RTLD_NOW | RTLD_LOCAL);
